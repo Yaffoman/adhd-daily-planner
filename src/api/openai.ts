@@ -1,4 +1,5 @@
 import {Configuration, OpenAIApi} from "openai";
+import {sampleResume} from "./sample";
 
 
 
@@ -14,8 +15,10 @@ const formatInstructions = "Format instructions: \n" +
 
 const basePrompt = "Use the following resume to create a persona object as described in the formatting instructions. Only respond with the json object.";
 
-export async function generatePersona(promptText) {
-    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n" + promptText;
+export async function generatePersona(resume) {
+
+    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n Here is my resume:\n" + sampleResume;
+    console.log(fullPrompt)
     const response = await basicChatRequest(fullPrompt);
     console.log(response)
     return response
@@ -31,11 +34,11 @@ export async function basicChatRequest(prompt) {
         presence_penalty: 0,
     }
     const configuration = new Configuration({
-        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+        apiKey: import.meta.env.VITE_OPENAI_KEY,
     });
     const openai = new OpenAIApi(configuration);
     const response = await openai.createChatCompletion({...modelConfig, messages: [
             {role: "user", content: prompt},
         ]});
-    return response.data.choices[0].message;
+    return response.data.choices[0].message.content;
 }

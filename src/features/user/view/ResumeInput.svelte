@@ -1,11 +1,30 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import {getPersona, updatePersona} from "../../../api/firestore";
+    import type {Persona} from "../../../api/models";
 
     let resume = '';
 
-    function handleSubmit() {
+    async function handleSubmit() {
         console.log('Submitting resume...');
-        goto('/taskList');
+        let currentPersona = getPersona();
+        if (!currentPersona) {
+            console.error('No persona found');
+            return;
+        }
+        else{
+            let resp = await fetch("/api/openai/resume", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ resume }),
+            });
+            let data = await resp.json()
+            await updatePersona(data as Persona)
+        }
+
+        // goto('/taskList');
     }
 </script>
 

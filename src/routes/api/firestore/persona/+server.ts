@@ -1,27 +1,27 @@
-import { doc, setDoc, getDoc} from 'firebase/firestore'
+import {doc, setDoc, getDoc} from 'firebase/firestore'
 
-import { personasCol } from "../../../../api/firestore";
-import type { Persona } from "../../../../features/firestore/models";
+import {personasCol} from "../../../../api/firestore";
+import type {Persona} from "../../../../features/firestore/models";
 
+const TEST_USER_ID = "test-user"
 
-export async function GET ( {request} ): Promise<Response> {
-    const { id } = await request.json();
-    const parseDoc = await getDoc(doc(personasCol, id));
-    
+export async function GET(): Promise<Response> {
+    const parseDoc = await getDoc(doc(personasCol, TEST_USER_ID));
+
     const persona = parseDoc.data() as Persona;
 
-    return new Response(JSON.stringify({ success: true, data: persona }));
+    return new Response(JSON.stringify({success: true, data: persona}));
 }
 
-export async function POST ( {request} ): Promise<Response>  {
+export async function POST({request}): Promise<Response> {
     try {
-        const { id, persona } = await request.json();
-        const myDoc = doc(personasCol, id)
+        const {persona} = await request.json();
+        const myDoc = doc(personasCol, TEST_USER_ID)
         setDoc(myDoc, persona);
 
-        return new Response(JSON.stringify({ success: true }));
+        return new Response(JSON.stringify({success: true}));
     } catch (e) {
-        return new Response(JSON.stringify({ success: false, error: e }));
+        return new Response(JSON.stringify({success: false, error: e}));
     }
-    
+
 }
