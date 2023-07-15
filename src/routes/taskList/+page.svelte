@@ -3,6 +3,7 @@
     import { TaskChatModel, TaskChatEntity } from "../../features/taskChat/domain/taskChat";
     import TaskChat from "../../features/taskChat/view/TaskChat.svelte";
     import TaskList from "../../features/taskList/view/TaskList.svelte";
+    import { CurrentUser } from "../../features/user/domain/user";
 
     let showChat = false;
 
@@ -16,7 +17,7 @@
 </script>
 
 <div class="h-full w-full flex flex-col px-10 overflow-auto">
-    <h1 class="text-white text-4xl font-medium pt-10">Hello Gabriel</h1>
+    <h1 class="text-white text-4xl font-medium pt-10">Hello {$CurrentUser.state.name}</h1>
     <p class="text-white text-lg">Please input your goals for the day</p>
     <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
     <TaskList />     

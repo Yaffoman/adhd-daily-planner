@@ -88,6 +88,7 @@ export class TaskModel extends Model<Task> {
         } else {
             // Show
             Popups.add({
+                isError: true,
                 message: 'Error generating subtasks, please try again',
             })
         }
