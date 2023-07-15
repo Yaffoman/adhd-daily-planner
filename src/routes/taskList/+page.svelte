@@ -16,7 +16,7 @@
 
 </script>
 
-<div class="h-full w-full flex flex-col px-10 overflow-auto">
+<div class="h-full w-full flex flex-col px-10 overflow-auto" on:click={() => {}}>
     <h1 class="text-white text-4xl font-medium pt-10">Hello Gabriel</h1>
     <p class="text-white text-lg">Please input your goals for the day</p>
     <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
