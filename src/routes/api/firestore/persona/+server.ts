@@ -1,6 +1,6 @@
 import { doc, setDoc, getDoc} from 'firebase/firestore'
 
-import { personasCol } from "../../../../api/firestore";
+import { personasCol } from "../../../../features/firestore/firestore";
 import type { Persona } from "../../../../features/firestore/models";
 
 

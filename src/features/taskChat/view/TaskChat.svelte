@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { slide } from 'svelte/transition';
+    import { slide, fade } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
     import type { TaskChatEntity, TaskChatModel } from '../domain/taskChat';
     import Message from './Message.svelte';
@@ -17,6 +17,13 @@
   
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   {#if showChat}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+    transition:fade={{duration: 250}}
+    class="fixed inset-0 z-40 bg-black bg-opacity-50"
+    class:hidden={!showChat}
+    on:click={handleClose}
+    />
     <div
     transition:slide={{duration: 250}}
     class="fixed bottom-0 left-0 right-0 z-50 h-3/4 md:h-3/4"
