@@ -28,6 +28,7 @@
 	"type": "module",
 	"dependencies": {
 		"@tauri-apps/api": "^1.4.0",
+		"firebase": "^10.0.0",
 		"openai": "^3.3.0"
 	}
 }
