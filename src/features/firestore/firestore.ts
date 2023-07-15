@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app"
-import {getFirestore, CollectionReference, collection, type DocumentData, doc, setDoc, getDoc} from 'firebase/firestore'
+import {getFirestore, CollectionReference, collection, type DocumentData, doc, setDoc, getDoc, updateDoc, deleteDoc} from 'firebase/firestore'
 import type {Persona} from "./models";
 
 
@@ -19,14 +19,16 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 }
 export const personasCol = createCollection<Persona>('personas')
 
-
+const TEST_USER_ID = "test-user"
+export const testDoc = doc(personasCol, TEST_USER_ID)
 export async function getPersona() {
-    const parseDoc = await getDoc(doc(personasCol, TEST_USER_ID));
+    const parseDoc = await getDoc(testDoc);
     return parseDoc.data() as Persona;
 }
-const TEST_USER_ID = "test-user"
 export async function updatePersona(persona: Persona) {
-    const myDoc = doc(personasCol, TEST_USER_ID)
-    return setDoc(myDoc, persona);
+    return setDoc(testDoc, {...persona}, {merge: true});
 }
 
+export async function deletePersona() {
+    return await deleteDoc(testDoc);
+}

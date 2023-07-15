@@ -1,9 +1,9 @@
 export interface Persona{
-    name: string;
-    occupation: string;
-    skills: string[];
-    experience: string[];
-    education: string[];
+    name?: string;
+    occupation?: string;
+    skills?: string[];
+    experience?: string[];
+    education?: string[];
 }
 
 export function parsePersona(data: any): Persona{
