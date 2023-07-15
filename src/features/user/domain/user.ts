@@ -1,8 +1,9 @@
+import { writable } from "svelte/store";
 import type { EntityProps } from "../../../architecture/entity";
 import Entity from "../../../architecture/entity";
 import Model from "../../../architecture/model";
 
-
+export const CurrentUser = writable<UserModel>(null);
 interface UserProps extends EntityProps {
     name: string;
     occupation: string;
