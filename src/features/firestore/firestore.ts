@@ -2,6 +2,7 @@ import {initializeApp} from "firebase/app"
 import {getFirestore, CollectionReference, collection, type DocumentData, doc, setDoc, getDoc} from 'firebase/firestore'
 import type {Persona} from "./models";
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyB1zm8u3Yi8YmpEopuRDAtmhAkG2wpqutk",
     authDomain: "adhd-daily-planner.firebaseapp.com",

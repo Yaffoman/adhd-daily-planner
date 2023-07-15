@@ -17,7 +17,7 @@ const basePrompt = "Use the following resume to create a persona object as descr
 
 export async function generatePersona(resume) {
 
-    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n Here is my resume:\n" + sampleResume;
+    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n Here is my resume:\n" + resume;
     console.log(fullPrompt)
     const response = await basicChatRequest(fullPrompt);
     console.log(response)
