@@ -14,8 +14,14 @@ const formatInstructions = "Format instructions: \n" +
 
 const basePrompt = "Use the following resume to create a persona object as described in the formatting instructions. Only respond with the json object.";
 
-export async function chatRequest(promptText) {
-    import.meta.env.OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY
+export async function generatePersona(promptText) {
+    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n" + promptText;
+    const response = await basicChatRequest(fullPrompt);
+    console.log(response)
+    return response
+}
+
+export async function basicChatRequest(prompt) {
     const modelConfig = {
         model: "gpt-3.5-turbo",
         temperature: 1,
@@ -28,9 +34,8 @@ export async function chatRequest(promptText) {
         apiKey: import.meta.env.VITE_OPENAI_API_KEY,
     });
     const openai = new OpenAIApi(configuration);
-    const fullPrompt = basePrompt + "\n" + formatInstructions + "\n" + promptText;
     const response = await openai.createChatCompletion({...modelConfig, messages: [
-            {role: "user", content: fullPrompt},
+            {role: "user", content: prompt},
         ]});
-    console.log(response)
+    return response.data.choices[0].message;
 }
