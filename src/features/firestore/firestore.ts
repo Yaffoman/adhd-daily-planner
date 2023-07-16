@@ -29,7 +29,7 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
     return collection(firestore, collectionName) as CollectionReference<T>
 }
 const personasCol = createCollection<Persona>('personas')
-const TEST_USER_ID = "test-user"
+const TEST_USER_ID = `${import.meta.env.mode}-user`
 const testDoc = doc(personasCol, TEST_USER_ID)
 
 export async function getPersona() {
@@ -45,14 +45,18 @@ export async function deletePersona() {
     return await deleteDoc(testDoc);
 }
 
+const tasksCol = createCollection<Task>('personas_tasks')
+const taskdoc = doc(tasksCol, TEST_USER_ID)
+
 export async function updatePersonaTasks(task: Task) {
-    const tasksCol = createCollection<Task>('personas_tasks')
-    const taskdoc = doc(tasksCol, TEST_USER_ID)
     return setDoc(taskdoc, task)
 }
 
 export async function getPersonaTasks() {
-    const tasksCol = createCollection<Task>('personas_tasks')
-    const taskdoc = await getDoc(doc(tasksCol, TEST_USER_ID));
-    return taskdoc.data() as Task;
+    const parseDoc = await getDoc(doc(tasksCol, TEST_USER_ID));
+    return parseDoc.data() as Task;
+}
+
+export async function deletePersonaTasks() {
+    return deleteDoc(taskdoc)
 }

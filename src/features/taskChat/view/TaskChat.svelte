@@ -66,7 +66,7 @@
     >
         <div class="flex flex-col h-full w-full bg-secondary rounded-t-xl">
             <div class="flex items-center justify-between p-3 pl-6 pr-4 border-b dark:border-gray-600">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Task Chat</h2>
+                <h2 class="text-lg font-semibold text-gray-300 dark:text-white">Task Chat</h2>
                 <button class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white focus:outline-none focus:text-gray-700 dark:focus:text-white material-icons" on:click={handleClose}>
                     close
                 </button>
@@ -94,7 +94,7 @@
                         <input
                         bind:value={chatInput}
                         type="text"
-                        class="block w-full py-2 pl-4 pr-10 text-gray-900 border border-gray-300 rounded-md bg-primary dark:text-white dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-40"
+                        class="block w-full py-2 pl-4 pr-10 text-gray-300 border border-gray-300 rounded-md bg-primary dark:text-white dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-40"
                         placeholder="Type your message..."
                         />
                         <button
