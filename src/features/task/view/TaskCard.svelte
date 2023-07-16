@@ -1,8 +1,5 @@
 <script lang="ts">
     import {fade, fly, slide} from "svelte/transition";
-    import Utils from "../../../utils/utils";
-    import LoadingIndicator from "../../shared/components/LoadingIndicator.svelte";
-    import Modal from "../../shared/components/Modal.svelte";
     import type {TaskModel} from "../domain/task";
     import { onMount } from "svelte";
     import Subtask from "./Subtask.svelte";
@@ -11,10 +8,11 @@
     export let depth: number = 0;
 
 
+
     let remainingTime = '';
     let subtasksOpen = false;
+    
 
-    $: console.log(remainingTime)
 
     function updateRemainingTime() {
         console.log('Updating remaining time')
@@ -33,13 +31,16 @@
         remainingTime = `${remainingHours ? remainingHours + ' Hrs' : ''} ${remainingMinutes ? remainingMinutes + ' Min' : ''}`;
     }
 
-    onMount(() =>{
-        updateRemainingTime();
-    }); 
+
+
 
     function handleClick() {
         subtasksOpen = !subtasksOpen;
     }
+
+    onMount(() =>{
+        updateRemainingTime();
+    }); 
 
 </script>
 
@@ -73,7 +74,6 @@
 
     {/if}
 </div>
-
 <style>
     button.arrow-icon {
         font-size: 28px;
