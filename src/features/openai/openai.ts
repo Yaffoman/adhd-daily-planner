@@ -56,7 +56,7 @@ async function basicChatRequest(prompt, model = "gpt-3.5-turbo") {
 export async function taskBreakdown(taskContext: string): Promise<string> {
 
     const modelConfig = {
-        model: 'gpt-4',
+        model: 'gpt-3.5-turbo-16k',
         temperature: 1,
         max_tokens: 2048,
         top_p: 1,
