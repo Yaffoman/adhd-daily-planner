@@ -1,7 +1,17 @@
 import {initializeApp} from "firebase/app"
-import {getFirestore, CollectionReference, collection, type DocumentData, doc, setDoc, getDoc, updateDoc, deleteDoc} from 'firebase/firestore'
+import {
+    getFirestore,
+    CollectionReference,
+    collection,
+    type DocumentData,
+    doc,
+    setDoc,
+    getDoc,
+    updateDoc,
+    deleteDoc
+} from 'firebase/firestore'
 import type {Persona, Task} from "./models";
-import type { TaskModel } from "../task/domain/task";
+import type {TaskModel} from "../task/domain/task";
 
 
 const firebaseConfig = {
@@ -18,14 +28,15 @@ const firestore = getFirestore(app)
 const createCollection = <T = DocumentData>(collectionName: string) => {
     return collection(firestore, collectionName) as CollectionReference<T>
 }
-export const personasCol = createCollection<Persona>('personas')
-
+const personasCol = createCollection<Persona>('personas')
 const TEST_USER_ID = "test-user"
-export const testDoc = doc(personasCol, TEST_USER_ID)
+const testDoc = doc(personasCol, TEST_USER_ID)
+
 export async function getPersona() {
     const parseDoc = await getDoc(testDoc);
     return parseDoc.data() as Persona;
 }
+
 export async function updatePersona(persona: Persona) {
     return setDoc(testDoc, {...persona}, {merge: true});
 }
@@ -34,7 +45,7 @@ export async function deletePersona() {
     return await deleteDoc(testDoc);
 }
 
-export async function updatePersonaTasks(task: Task){
+export async function updatePersonaTasks(task: Task) {
     const tasksCol = createCollection<Task>('personas_tasks')
     const taskdoc = doc(tasksCol, TEST_USER_ID)
     return setDoc(taskdoc, task)

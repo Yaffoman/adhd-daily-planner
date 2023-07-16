@@ -1,14 +1,22 @@
 <script lang="ts">
-    import { fade, fly, slide } from "svelte/transition";
+    import {fade, fly, slide} from "svelte/transition";
     import Utils from "../../../utils/utils";
     import LoadingIndicator from "../../shared/components/LoadingIndicator.svelte";
     import Modal from "../../shared/components/Modal.svelte";
-    import type {  TaskModel } from "../domain/task";
+    import type {TaskModel} from "../domain/task";
 
     export let task: TaskModel;
     export let isSubTask: boolean = false;
     export let depth: number = 0;
 
+    let open = false;
+    let loading = false;
+    let showModal = false;
+    let taskContext = '';
+    const remainingTotalMinutes = task ? task.state.subTasks.filter(subtask => !subtask.state.isComplete).length * 15 : 0;
+    const remainingHours = Math.floor(remainingTotalMinutes / 60);
+    const remainingMinutes = remainingTotalMinutes % 60;
+    const remainingTime = `${remainingHours ? remainingHours + ' Hrs' : ''} ${remainingMinutes ? remainingMinutes + ' Min' : ''}`;
     let subtasksOpen = false;
     let focusMode = false;
 
@@ -34,6 +42,7 @@
             <button class:bg-slate-800={!$task.isComplete} class:hover:bg-slate-700={!$task.isComplete} class:bg-ice={$task.isComplete} class="rounded-full border-2 border-ice border-opacity-75 hover:cursor-pointer h-6 w-6 min-h-[1.5rem] min-w-[1.5rem] max-h-6 max-w-6 my-auto" on:click={() => task.markComplete(!$task.isComplete)}/>
             <div class="flex flex-col ml-3 my-auto select-none" class:line-through={$task.isComplete}>
                 <p class="font-medium">{task.state.title}</p>
+                <p>Time Remaining: {remainingTime}</p>
                 <!-- <p>Estimated Time: {$task.timeEstimate}</p> -->
                 <p class="text-sm mt-1">{$task.context !== 'No additional context provided.' ? $task.context : ''}</p>
                 <!-- <p class="text-sm mt-1">{$task.context}</p> -->
@@ -55,7 +64,7 @@
                 <svelte:self task={subTask} isSubTask={true} depth={depth + 1}/>
             {/each}
         </div>
-        
+
     {/if}
 </div>
 
@@ -65,16 +74,23 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if focusMode}
     <div
-        transition:fade={{duration: 200}}
-        class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10"
-        class:hidden={!focusMode}
-        on:click={() => focusMode = false}
-        >
-        <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
-        <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
-        <h2 class="mx-auto mt-10 text-2xl">Task</h2>
-        <h2 class="mx-auto text-2xl">{task.state.title}</h2>
+            transition:fade={{duration: 200}}
+            class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10 justify-between flex flex-col"
+            class:hidden={!focusMode}
+            on:click={() => focusMode = false}
+    >
+        <div>
+            <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
+            <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5"/>
+            <h2 class="mx-auto mt-10 text-2xl text-white my-2">Task:&emsp;{task.state.title}</h2>
+            <h2 class="mx-auto text-xl text-white">Additional Notes:&emsp;{task.state.context}</h2>
+        </div>
+        <div class="flex justify-center p-5">
+
+            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>Stop Focus</button>
+        </div>
     </div>
+
 {/if}
 
 <style>
