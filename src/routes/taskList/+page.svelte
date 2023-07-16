@@ -11,7 +11,7 @@
 
     function openAddTaskChat() {
         taskChatModel = new TaskChatModel(new TaskChatEntity({messages: [new MessageModel(new Message({role: ChatRole.ASSISTANT, content: 'Hello! Please enter the task you would like to work on today as well as the time you plan to allot for it.'}))]}));
-        showChat = true; 
+        showChat = true;
     }
 
 </script>
@@ -20,7 +20,7 @@
     <h1 class="text-white text-4xl font-medium pt-10">Hello {$CurrentUser.state.name}</h1>
     <p class="text-white text-lg">Please input your goals for the day</p>
     <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
-    <TaskList />     
+    <TaskList />
     <button class="px-3 py-1.5 bg-blue-base rounded hover:bg-blue-hover text-white h-[40px] ml-2 w-36" on:click={openAddTaskChat}>Add Task</button>
     <TaskChat {showChat} taskChat={taskChatModel} on:closeChat={() => showChat = false}  />
 </div>
