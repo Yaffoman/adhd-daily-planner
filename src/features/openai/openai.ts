@@ -17,7 +17,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-export async function conversationRequest(messages, model = "gpt-3.5-16k"): Promise<ChatCompletionResponseMessage> {
+export async function conversationRequest(messages, model = "gpt-3.5-turbo-16k"): Promise<ChatCompletionResponseMessage> {
     console.log('Message: ', messages)
     const modelConfig = {
         model: model,
