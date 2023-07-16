@@ -28,9 +28,9 @@ const firestore = getFirestore(app)
 const createCollection = <T = DocumentData>(collectionName: string) => {
     return collection(firestore, collectionName) as CollectionReference<T>
 }
-const personasCol = createCollection<Persona>('personas')
-const TEST_USER_ID = `${import.meta.env.mode}-user`
-const testDoc = doc(personasCol, TEST_USER_ID)
+export const personasCol = createCollection<Persona>('personas')
+export const TEST_USER_ID = `${import.meta.env.mode}-user`
+export const testDoc = doc(personasCol, TEST_USER_ID)
 
 export async function getPersona() {
     const parseDoc = await getDoc(testDoc);
