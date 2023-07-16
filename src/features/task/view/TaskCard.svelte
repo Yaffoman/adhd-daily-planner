@@ -135,8 +135,8 @@
 
 
         <div class="flex justify-center p-5">
-            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>Stop
-                Focus
+            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>
+                Exit
             </button>
         </div>
     </div>
