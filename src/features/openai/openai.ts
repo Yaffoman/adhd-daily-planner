@@ -13,11 +13,11 @@ export async function generatePersona(resume) {
 
 
 const configuration = new Configuration({
-    apiKey: import.meta.env.VITE_OPENAI_KEY_GPT4,
+    apiKey: import.meta.env.VITE_OPENAI_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-export async function conversationRequest(messages, model = "gpt-4"): Promise<ChatCompletionResponseMessage> {
+export async function conversationRequest(messages, model = "gpt-3.5-16k"): Promise<ChatCompletionResponseMessage> {
     console.log('Message: ', messages)
     const modelConfig = {
         model: model,
@@ -49,6 +49,7 @@ async function basicChatRequest(prompt, model = "gpt-3.5-turbo") {
             {role: "user", content: prompt},
         ]
     });
+    console.log(response)
     return response.data.choices[0].message.content;
 }
 
