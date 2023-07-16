@@ -80,6 +80,7 @@ The final output should be only a JSON object encapsulating the proposed time-bl
 Example Output JSON:
 {
     "task": "Integrating subscriptions in a Svelte + Electron application using Stripe API",
+    "estimated_time: "3 Hours",
     "subtasks": [
         {
             "estimated_time": "15 minutes",

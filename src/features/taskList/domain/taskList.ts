@@ -55,7 +55,7 @@ class _TaskListModel extends Model<TaskListState> {
         updatePersonaTasks(breakdown);
         const task = new TaskModel(new Task ({title: breakdown.task}))
         breakdown.subtasks.forEach((subtask) => {
-            task.addSubTask(new Task({title: subtask.task}));
+            task.addSubTask(new Task({title: subtask.task, timeEstimate: subtask.estimated_time, context: subtask.notes}));
         });
         this.update((state) => state.copyWith({ tasks: [...state.tasks, task] }));
     }

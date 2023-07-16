@@ -6,7 +6,6 @@
     import {CurrentUser} from "../../features/user/domain/user";
 
     let showChat = false;
-
     let taskChatModel = null;
 
     function openAddTaskChat() {
