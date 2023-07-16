@@ -33,6 +33,7 @@
     }
 
     function startTimer() {
+        time--;
         timer = setInterval(() => {
             time--;
             if (time <= 0) {
@@ -83,34 +84,41 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if focusMode}
     <div
-            transition:fade={{duration: 200}}
-            class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10 justify-between flex flex-col"
-            class:hidden={!focusMode}
-            on:click={() => {focusMode = false; stopTimer()}}
+        transition:fade={{duration: 200}}
+        class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-lg px-10 justify-between flex flex-col select-none"
+        class:hidden={!focusMode}
     >
-        <div>
-            <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
-            <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5"/>
-            <div class="pl-8">
-            <h2 class="mx-auto mt-10 text-4xl text-white">Task</h2>
-            <h2 class="mx-auto text-2xl text-white mb-5">{task.state.title}</h2>
-            <h2 class="mx-auto text-4xl text-white">Notes</h2>
-            <h2 class="mx-auto text-2xl text-white">{task.state.context}</h2>
+        <div class="w-full mx-auto">
+            <div class="w-full md:w-3/4 xl:w-1/2 mx-auto">
+                <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
+                <h3 class="text-white text-lg text-opacity-90 pt-4 text-center">For better focus, turn on Do Not Disturb while working on this task</h3>
+                <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5 mx-auto"/>
+                <div class="w-full flex flex-col">
+                    <div class="mx-auto mt-4">
+                        <h2 class="mx-auto text-lg text-white text-opacity-50">Task</h2>
+                        <h2 class="mx-auto text-xl min-[500px]:text-2xl md:text-3xl text-white mb-5">{task.state.title}</h2>
+                        <h2 class="mx-auto text-lg text-white text-opacity-50">Notes</h2>
+                        <h2 class="mx-auto text-xl min-[500px]:text-2xl md:text-3xl text-white">{task.state.context}</h2>
+                    </div>
+
+                    
+                </div>
             </div>
+            
             <div class="flex justify-center flex-col items-center">
 
-                <h1 class="mx-auto mt-10 text-[168px] text-white my-2" class:animate-pulse={timerExpired} style="animation-duration: 1.3s">
+                <h1 class="mx-auto mt-10 text-[96px] min-[500px]:text-[144px] sm:text-[168px] md:text-[200px] text-white my-2 font-medium" class:animate-pulse={timerExpired} style="animation-duration: 1.3s">
                     {Math.floor(time / 60) < 10 ? "0" : ""}{Math.floor(time / 60)}:
                     {time % 60 < 10 ? "0" : ""}{time % 60}</h1>
                 <div>
                     <button on:click|stopPropagation={timer ? stopTimer : startTimer}
-                            class="bg-ice rounded-full px-5 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12"
+                            class="bg-blue-base hover:bg-blue-hover rounded-md px-5 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12 text-white"
                     >
-                        {timer ? "Stop Timer" : "Start Timer"}
+                        {timer ? "Stop" : "Start"}
                     </button>
                     {#if time !== fifteenMinutesInSeconds}
                     <button on:click|stopPropagation={resetTimer} transition:fade={{duration: 200}}
-                            class="bg-slate-400 rounded-full px-2 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12 w-fit"
+                            class="bg-red-base hover:bg-red-hover rounded-md px-2 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12 w-fit text-white ml-2"
                     >
                         Reset
                     </button>
@@ -121,8 +129,8 @@
 
 
         <div class="flex justify-center p-5">
-            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>
-                Exit
+            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl py-1" on:click={() => {focusMode = false; stopTimer()}}>
+                Exit Focus Mode
             </button>
         </div>
     </div>
