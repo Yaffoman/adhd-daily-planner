@@ -1,9 +1,8 @@
 import {doc, setDoc, getDoc} from 'firebase/firestore'
 
-import { personasCol } from "../../../../features/firestore/firestore";
+import {personasCol, TEST_USER_ID} from "../../../../features/firestore/firestore";
 import type { Persona } from "../../../../features/firestore/models";
 
-const TEST_USER_ID = "test-user"
 
 export async function GET(): Promise<Response> {
     const parseDoc = await getDoc(doc(personasCol, TEST_USER_ID));
