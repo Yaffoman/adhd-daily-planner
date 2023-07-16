@@ -29,9 +29,9 @@
     {/if}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="flex flex-row px-4 py-3 bg-secondary rounded-md drop-shadow text-white text-md w-full sm:w-3/4 md:w-1/2 mx-auto border-2 border-opacity-75 border-secondary z-10 {isSubTask ? '': 'mt-3'} relative" class:opacity-20={$task.isComplete} on:click={handleClick}>
+    <div class="flex flex-row px-4 py-3 bg-secondary rounded-md drop-shadow text-white text-md w-full sm:w-3/4 md:w-1/2 mx-auto border-2 border-opacity-75 border-secondary z-10 {isSubTask ? '': 'mt-3'} relative hover:cursor-pointer" class:opacity-20={$task.isComplete} on:click={handleClick}>
         <button class:bg-slate-800={!$task.isComplete} class:hover:bg-slate-700={!$task.isComplete} class:bg-ice={$task.isComplete} class="rounded-full border-2 border-ice border-opacity-75 hover:cursor-pointer h-6 w-6 min-h-[1.5rem] min-w-[1.5rem] max-h-6 max-w-6 my-auto" on:click={() => task.markComplete(!$task.isComplete)}/>
-        <div class="flex flex-col ml-3" class:line-through={$task.isComplete}>
+        <div class="flex flex-col ml-3 my-auto select-none" class:line-through={$task.isComplete}>
             <p class="font-medium">{task.state.title}</p>
             <!-- <p>Estimated Time: {$task.timeEstimate}</p> -->
             <p class="text-sm mt-1">{$task.context !== 'No additional context provided.' ? $task.context : ''}</p>
@@ -60,16 +60,19 @@
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    transition:fade={{duration: 250}}
-    class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10"
-    class:hidden={!focusMode}
-    on:click={() => focusMode = false}
-    >
-    <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
-    <h2 class="mx-auto mt-10 text-2xl">Task</h2>
-    <h2 class="mx-auto text-2xl">{task.state.title}</h2>
-</div>
+{#if focusMode}
+    <div
+        transition:fade={{duration: 200}}
+        class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10"
+        class:hidden={!focusMode}
+        on:click={() => focusMode = false}
+        >
+        <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
+        <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
+        <h2 class="mx-auto mt-10 text-2xl">Task</h2>
+        <h2 class="mx-auto text-2xl">{task.state.title}</h2>
+    </div>
+{/if}
 
 <style>
     button.arrow-icon {
