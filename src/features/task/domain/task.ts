@@ -10,7 +10,7 @@ interface TaskProps extends EntityProps {
     context?: string;
     isComplete?: boolean;
     subTasks?: TaskModel[];
-    timeEstimate?: number;
+    timeEstimate?: string;
 }
 
 
@@ -22,7 +22,7 @@ export class Task extends Entity<TaskProps> {
     readonly parentTask: TaskModel;
     readonly isComplete: boolean;
     readonly subTasks: TaskModel[];
-    readonly timeEstimate: number;
+    readonly timeEstimate: string;
 
     constructor(params: TaskProps) {
         super(params.fetchState);
@@ -31,7 +31,7 @@ export class Task extends Entity<TaskProps> {
         this.parentTask = params.parentTask ?? null;
         this.isComplete = params.isComplete ?? false;
         this.subTasks = params.subTasks ?? [];
-        this.timeEstimate = params.timeEstimate ?? 0;
+        this.timeEstimate = params.timeEstimate ?? "";
     }
 
 
@@ -57,40 +57,7 @@ export class TaskModel extends Model<Task> {
         this.update((state) => state.copyWith({ context: context }));
     }
 
-    async generateSubTasks(isSubTask: boolean): Promise<void> {
-        const response = await fetch('/api', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                task: this.state.title,
-                context: this.state.context,
-            }),
-        });
-
-        if (response.ok) {
-            // Parse the response body as JSON
-            console.log(response)
-            const jsonResponse = await response.json();
-
-            // Create subTask models from the response
-            const subTasks = jsonResponse.data.subtasks.map((subTask: any) => new TaskModel(new Task({title: subTask.task, timeEstimate: Utils.parseTime(subTask.estimated_time), parentTask: this})));
-
-            // Get total time estimate
-            let totalTimeEstimate = 0;
-            subTasks.forEach((subTask) => {
-                totalTimeEstimate += subTask.state.timeEstimate;
-            });
-
-            // Update the state
-            this.update((state) => state.copyWith({ subTasks: subTasks, timeEstimate: totalTimeEstimate }));
-        } else {
-            // Show
-            Popups.add({
-                isError: true,
-                message: 'Error generating subtasks, please try again',
-            })
-        }
+    addSubTask(subTask: Task): void {
+        this.update((state) => state.copyWith({ subTasks: [...state.subTasks, new TaskModel(subTask)] }));
     }
 }

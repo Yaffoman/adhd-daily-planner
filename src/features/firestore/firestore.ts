@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app"
 import {getFirestore, CollectionReference, collection, type DocumentData, doc, setDoc, getDoc, updateDoc, deleteDoc} from 'firebase/firestore'
-import type {Persona} from "./models";
+import type {Persona, Task} from "./models";
+import type { TaskModel } from "../task/domain/task";
 
 
 const firebaseConfig = {
@@ -31,4 +32,16 @@ export async function updatePersona(persona: Persona) {
 
 export async function deletePersona() {
     return await deleteDoc(testDoc);
+}
+
+export async function updatePersonaTasks(task: Task){
+    const tasksCol = createCollection<Task>('personas_tasks')
+    const taskdoc = doc(tasksCol, TEST_USER_ID)
+    return setDoc(taskdoc, task)
+}
+
+export async function getPersonaTasks() {
+    const tasksCol = createCollection<Task>('personas_tasks')
+    const taskdoc = await getDoc(doc(tasksCol, TEST_USER_ID));
+    return taskdoc.data() as Task;
 }

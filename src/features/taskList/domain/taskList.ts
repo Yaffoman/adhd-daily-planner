@@ -1,9 +1,20 @@
 import Entity, { type EntityProps } from "../../../architecture/entity";
 import Model from "../../../architecture/model";
+import { updatePersonaTasks } from "../../firestore/firestore";
 import { Task, TaskModel } from "../../task/domain/task";
 
 interface TaskListProps extends EntityProps {
     tasks?: TaskModel[];
+}
+interface TaskBreakdown {
+    task: string;
+    subtasks: SubtaskBreakdown[];
+}
+
+interface SubtaskBreakdown {
+    task: string;
+    estimated_time: string;
+    notes?: string;
 }
 
 export class TaskListState extends Entity<TaskListProps> {
@@ -40,7 +51,15 @@ class _TaskListModel extends Model<TaskListState> {
         this.update((state) => state.copyWith({ tasks: state.tasks.filter((t) => t.state.title !== task.state.title) }));
     }
 
+    parseTaskBreakdownAndAdd(breakdown: TaskBreakdown): void {
+        updatePersonaTasks(breakdown);
+        const task = new TaskModel(new Task ({title: breakdown.task}))
+        breakdown.subtasks.forEach((subtask) => {
+            task.addSubTask(new Task({title: subtask.task}));
+        });
+        this.update((state) => state.copyWith({ tasks: [...state.tasks, task] }));
+    }
     
 }
 
-export const TaskList = new _TaskListModel(new TaskListState({tasks: [new TaskModel(new Task({title: "Write a medium blog" }))]}));
+export const TaskList = new _TaskListModel(new TaskListState({tasks: []}));

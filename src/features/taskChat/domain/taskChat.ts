@@ -1,6 +1,7 @@
 import Entity, { type EntityProps } from "../../../architecture/entity";
 import Model from "../../../architecture/model";
-import { Message, MessageModel } from "./message";
+import { TaskList } from "../../taskList/domain/taskList";
+import { ChatRole, Message, MessageModel } from "./message";
 
 interface TaskChatProps extends EntityProps {
     messages: MessageModel[];
@@ -27,7 +28,7 @@ export class TaskChatModel extends Model<TaskChatEntity> {
         super(initialValue);
     }
 
-    async addMessageAndGetAssistantResponse(message: MessageModel): Promise<void> {
+    async addMessageAndGetAssistantResponse(message: MessageModel): Promise<null | string> {
         this.update((state) => state.copyWith({ messages: [...state.messages, message] }));
 
         const currentMessages = this.state.messages.map((message) => {
@@ -37,7 +38,7 @@ export class TaskChatModel extends Model<TaskChatEntity> {
         const response = await fetch('/api/openai/taskChat', {
             method: 'POST',
             body: JSON.stringify({ messages: currentMessages }),
-        })
+        });
 
         if (response.ok) {
             const data = await response.json();
@@ -45,12 +46,39 @@ export class TaskChatModel extends Model<TaskChatEntity> {
 
             const assistantMessage = data.data;
 
-            this.update((state) => state.copyWith({ messages: [...state.messages, new MessageModel(new Message(assistantMessage))] }));
-        } else {
-            console.log('ur an idiot')
-        }
-        
+            // Check for [JSON READY] tag
+            if (assistantMessage.content.includes('[JSON READY]')) {
+                this.update((state) => state.copyWith({ messages: [...state.messages, new MessageModel(new Message({role: ChatRole.ASSISTANT, content: 'That\'s all the information I need thank you, I will begin to break down your task now.'}))] }));
+                return assistantMessage.content.replace('[JSON READY]', '');
+            }
 
+            this.update((state) => state.copyWith({ messages: [...state.messages, new MessageModel(new Message(assistantMessage))] }));
+            return null;
+        } else {
+            console.log('ur an idiot');
+            return null;
+        }
+    }
+
+    async breakdownTask(gptPrompt: string) {
+        const response = await fetch('/api/openai/taskBreakdown', {
+            method: 'POST',
+            body: JSON.stringify({ context: gptPrompt }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+
+            const taskBreakdown = data.data;
+            // extract the json from this text, assuming first and last brackets are the json
+            const parsedText = taskBreakdown.substring(taskBreakdown.indexOf('{'), taskBreakdown.lastIndexOf('}') + 1);
+            const taskBreakdownObject = JSON.parse(parsedText);
+
+            
+            TaskList.parseTaskBreakdownAndAdd(taskBreakdownObject);
+            // Create and add task objects here.
+        }
     }
 
 

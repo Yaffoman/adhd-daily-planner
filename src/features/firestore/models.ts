@@ -6,12 +6,13 @@ export interface Persona{
     education?: string[];
 }
 
-export function parsePersona(data: any): Persona{
-    return {
-        name: data.name,
-        occupation: data.occupation,
-        skills: data.skills,
-        experience: data.experience,
-        education: data.education,
-    }
+export interface Task{
+    task: string;
+    subtasks?: Task[]
+}
+
+export interface SubTask{
+    title: string;
+    estimated_time?: string;
+    notes?: string;
 }

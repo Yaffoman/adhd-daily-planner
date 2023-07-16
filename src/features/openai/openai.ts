@@ -1,6 +1,6 @@
 import {Configuration, OpenAIApi, type ChatCompletionResponseMessage} from "openai";
 import {sampleResume} from "./sample";
-import { taskContextPrompt } from "./prompts";
+import { taskBreakdownPrompt, taskContextPrompt } from "./prompts";
 import type { Message } from "../taskChat/domain/message";
 
 
@@ -64,4 +64,24 @@ async function basicChatRequest(prompt, model = "gpt-3.5-turbo") {
         ]
     });
     return response.data.choices[0].message.content;
+}
+
+export async function taskBreakdown(taskContext: string): Promise<string> {
+
+    const modelConfig = {
+        model: 'gpt-4',
+        temperature: 1,
+        max_tokens: 2048,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+    }
+    console.log(taskContext)
+
+    const response = await openai.createChatCompletion({
+        ...modelConfig, messages: [{role: 'system', content: taskBreakdownPrompt}, {role: 'user', content: taskContext}]
+    });
+
+    return response.data.choices[0].message.content
+
 }

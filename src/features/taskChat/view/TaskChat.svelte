@@ -4,18 +4,33 @@
     import type { TaskChatModel } from '../domain/taskChat';
     import ChatBubble from './ChatBubble.svelte';
     import { MessageModel, Message, ChatRole } from '../domain/message';
+    import LoadingIndicator from '../../shared/components/LoadingIndicator.svelte';
     const dispatch = createEventDispatcher();
   
     export let showChat = false;
     export let taskChat: TaskChatModel;
 
     let chatInput = '';
+    let assistantLoading = false;
+    let chatComplete = null;
+    let taskBreakdown = false;
 
-    function handleChatInput() {
+    async function handleChatInput() {
         if (chatInput === '') return;
         const message = new MessageModel(new Message({role: ChatRole.USER, content: chatInput}));
-        taskChat.addMessageAndGetAssistantResponse(message);
         chatInput = '';
+        assistantLoading = true;
+        chatComplete = await taskChat.addMessageAndGetAssistantResponse(message);
+        console.log('Breakdown:', chatComplete)
+        assistantLoading = false;
+
+
+        // Check if chat is complete
+        if (chatComplete !== null) {
+            taskBreakdown = true;
+            await taskChat.breakdownTask(chatComplete);
+            taskBreakdown = false;
+        }
     }
 
     function handleClose() {
@@ -56,31 +71,60 @@
                     close
                 </button>
             </div>
-            <div class="flex-1 p-4 overflow-y-auto">
-                <!-- Messages -->
-                {#each $taskChat.messages as chatBubble}
+            <div class="flex-1 p-4 overflow-y-auto flex-col-reverse flex justify-start">
+               {#if assistantLoading}
+                    <div class="rounded-[50px] h-8 flex flex-row bg-primary animate-pulse p-1.5 px-2 loader items-center">
+                        <div class="rounded-full h-2 w-2 bg-white bg-opacity-75 animate-bounce" />
+                        <div class="rounded-full h-2 w-2 bg-white bg-opacity-75 animate-bounce mx-1 dot-2" />
+                        <div class="rounded-full h-2 w-2 bg-white bg-opacity-75 animate-bounce dot-3" />
+                    </div>
+                {/if}
+                 <!-- Messages -->
+                {#each [...$taskChat.messages].reverse() as chatBubble}
                     <ChatBubble role={chatBubble.state.role} content={chatBubble.state.content} />
                 {:else}
                     <span>No Chats</span>
                 {/each}
+                
 
             </div>
-            <div class="mt-auto p-3">
-                <div class="relative flex items-center">
-                    <input
-                    bind:value={chatInput}
-                    type="text"
-                    class="block w-full py-2 pl-4 pr-10 text-gray-900 border border-gray-300 rounded-md bg-primary dark:text-white dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-40"
-                    placeholder="Type your message..."
-                    />
-                    <button
-                    class="absolute right-0 p-2 text-white text-opacity-50 hover:text-opacity-100 material-icons" on:click={handleChatInput}>
-                        keyboard_arrow_right
-                    </button>
-                </div>
+            <div class="mt-auto p-3 w-full align-center flex">
+                {#if !taskBreakdown}
+                    <div class="relative flex items-center w-full">
+                        <input
+                        bind:value={chatInput}
+                        type="text"
+                        class="block w-full py-2 pl-4 pr-10 text-gray-900 border border-gray-300 rounded-md bg-primary dark:text-white dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-40"
+                        placeholder="Type your message..."
+                        />
+                        <button
+                        class="absolute right-0 p-2 text-white text-opacity-50 hover:text-opacity-100 material-icons" on:click={handleChatInput}>
+                            keyboard_arrow_right
+                        </button>
+                    </div>
+                {:else}
+                    <div class="flex flex-row items-center animate-pulse relative mx-auto">
+                        <span class="font-medium">Generating Task Breakdown </span>
+                        <LoadingIndicator positioning='block ml-3 mb-1.5'/>
+                    </div>
+                {/if}
             </div>
         </div>
     </div>
 
 {/if}
   
+<style>
+    .loader {
+        width: fit-content;
+    }
+
+    .dot-2 {
+        animation-delay: 0.1s;
+    }
+
+    .dot-3 {
+        animation-delay: 0.2s;
+    }
+    
+</style>
