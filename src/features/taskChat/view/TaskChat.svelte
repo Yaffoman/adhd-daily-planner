@@ -30,6 +30,7 @@
             taskBreakdown = true;
             await taskChat.breakdownTask(chatComplete);
             taskBreakdown = false;
+            showChat = false;
         }
     }
 
@@ -104,7 +105,7 @@
                     </div>
                 {:else}
                     <div class="flex flex-row items-center animate-pulse relative mx-auto">
-                        <span class="font-medium">Generating Task Breakdown </span>
+                        <span class="font-medium text-gray-300">Generating Task Breakdown </span>
                         <LoadingIndicator positioning='block ml-3 mb-1.5'/>
                     </div>
                 {/if}
