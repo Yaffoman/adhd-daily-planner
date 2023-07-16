@@ -24,28 +24,31 @@
 </script>
 
 <div class="flex flex-col">
-    {#if isSubTask}
-        <div class="h-3 w-1 mr-5 ml-auto z-0 depth-{depth % 6}"/>
-    {/if}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="flex flex-row px-4 py-3 bg-secondary rounded-md drop-shadow text-white text-md w-full sm:w-3/4 md:w-1/2 mx-auto border-2 border-opacity-75 border-secondary z-10 {isSubTask ? '': 'mt-3'} relative hover:cursor-pointer" class:opacity-20={$task.isComplete} on:click={handleClick}>
-        <button class:bg-slate-800={!$task.isComplete} class:hover:bg-slate-700={!$task.isComplete} class:bg-ice={$task.isComplete} class="rounded-full border-2 border-ice border-opacity-75 hover:cursor-pointer h-6 w-6 min-h-[1.5rem] min-w-[1.5rem] max-h-6 max-w-6 my-auto" on:click={() => task.markComplete(!$task.isComplete)}/>
-        <div class="flex flex-col ml-3 my-auto select-none" class:line-through={$task.isComplete}>
-            <p class="font-medium">{task.state.title}</p>
-            <!-- <p>Estimated Time: {$task.timeEstimate}</p> -->
-            <p class="text-sm mt-1">{$task.context !== 'No additional context provided.' ? $task.context : ''}</p>
-            <!-- <p class="text-sm mt-1">{$task.context}</p> -->
-        </div>
-        {#if $task.subTasks.length > 0}
-            <button
-                class:rotate-90={!subtasksOpen}
-                class="material-icons ease-out duration-300 arrow-icon opacity-75 cursor-pointer select-none">
-                arrow_drop_down
-            </button>
+    <div class="flex flex-col w-full sm:w-3/4 md:w-2/3 mx-auto">
+        {#if isSubTask}
+            <div class="h-3 w-1 mr-[30px] ml-auto z-0 depth-{depth % 6}"/>
         {/if}
-        
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div class="flex flex-row bg-secondary rounded-md drop-shadow text-white text-md w-full mx-auto z-10 {isSubTask ? '': 'mt-3'} {!subtasksOpen ? 'px-[18px] py-[14px]' : 'px-4 py-3'} relative hover:cursor-pointer" class:opacity-20={$task.isComplete} on:click={handleClick} class:border-ice={subtasksOpen && !isSubTask} class:border-2={subtasksOpen && !isSubTask} class:border-opacity-72={subtasksOpen && !isSubTask} class:p-0.5={!subtasksOpen && !isSubTask}>
+            <button class:bg-slate-800={!$task.isComplete} class:hover:bg-slate-700={!$task.isComplete} class:bg-ice={$task.isComplete} class="rounded-full border-2 border-ice border-opacity-75 hover:cursor-pointer h-6 w-6 min-h-[1.5rem] min-w-[1.5rem] max-h-6 max-w-6 my-auto" on:click={() => task.markComplete(!$task.isComplete)}/>
+            <div class="flex flex-col ml-3 my-auto select-none" class:line-through={$task.isComplete}>
+                <p class="font-medium">{task.state.title}</p>
+                <!-- <p>Estimated Time: {$task.timeEstimate}</p> -->
+                <p class="text-sm mt-1">{$task.context !== 'No additional context provided.' ? $task.context : ''}</p>
+                <!-- <p class="text-sm mt-1">{$task.context}</p> -->
+            </div>
+            {#if $task.subTasks.length > 0}
+                <button
+                    class:rotate-90={!subtasksOpen}
+                    class="material-icons ease-out duration-300 arrow-icon opacity-75 cursor-pointer select-none ml-auto">
+                    arrow_drop_down
+                </button>
+            {/if}
+            
         </div>
+    </div>
+    
     {#if subtasksOpen}
         <div transition:slide={{duration: 250}}>
             {#each task.state.subTasks as subTask}
