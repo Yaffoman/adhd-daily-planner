@@ -11,6 +11,7 @@
             if (!persona) {
                 goto('/resume');
             } else {
+                // @ts-ignore
                 CurrentUser.set(new UserModel(new User(persona)));
                 goto('/taskList');
             }

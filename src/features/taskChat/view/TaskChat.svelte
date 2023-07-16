@@ -1,12 +1,22 @@
 <script lang="ts">
     import { slide, fade } from 'svelte/transition';
     import { createEventDispatcher } from 'svelte';
-    import type { TaskChatEntity, TaskChatModel } from '../domain/taskChat';
-    import Message from './Message.svelte';
+    import type { TaskChatModel } from '../domain/taskChat';
+    import ChatBubble from './ChatBubble.svelte';
+    import { MessageModel, Message, ChatRole } from '../domain/message';
     const dispatch = createEventDispatcher();
   
     export let showChat = false;
     export let taskChat: TaskChatModel;
+
+    let chatInput = '';
+
+    function handleChatInput() {
+        if (chatInput === '') return;
+        const message = new MessageModel(new Message({role: ChatRole.USER, content: chatInput}));
+        taskChat.addMessageAndGetAssistantResponse(message);
+        chatInput = '';
+    }
 
     function handleClose() {
         showChat = false;
@@ -39,7 +49,7 @@
             <div class="flex-1 p-4 overflow-y-auto">
                 <!-- Messages -->
                 {#each $taskChat.messages as chatBubble}
-                    <Message role={chatBubble.state.role} content={chatBubble.state.content} />
+                    <ChatBubble role={chatBubble.state.role} content={chatBubble.state.content} />
                 {:else}
                     <span>No Chats</span>
                 {/each}
@@ -48,12 +58,13 @@
             <div class="mt-auto p-3">
                 <div class="relative flex items-center">
                     <input
+                    bind:value={chatInput}
                     type="text"
                     class="block w-full py-2 pl-4 pr-10 text-gray-900 border border-gray-300 rounded-md bg-primary dark:text-white dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="Type your message..."
                     />
                     <button
-                    class="absolute right-0 p-2 text-white text-opacity-50 hover:text-opacity-100 material-icons">
+                    class="absolute right-0 p-2 text-white text-opacity-50 hover:text-opacity-100 material-icons" on:click={handleChatInput}>
                         keyboard_arrow_right
                     </button>
                 </div>
