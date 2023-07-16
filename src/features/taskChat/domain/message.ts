@@ -2,9 +2,9 @@ import Entity, { type EntityProps } from "../../../architecture/entity";
 import Model from "../../../architecture/model";
 
 export enum ChatRole {
-    SYSTEM,
-    ASSISTANT,
-    USER,
+    SYSTEM='system',
+    ASSISTANT='assistant',
+    USER='user',
 }
 
 interface MessageProps extends EntityProps {
@@ -33,5 +33,12 @@ export class Message extends Entity<MessageProps> {
 export class MessageModel extends Model<Message> {
     constructor(initialValue: Message) {
         super(initialValue);
+    }
+
+    toJSON() {
+        return {
+            role: this.state.role,
+            content: this.state.content,
+        }
     }
 }

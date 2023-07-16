@@ -26,7 +26,7 @@
             await updatePersona(data as Persona)
 
             // Create and set current user object
-            const user = new UserModel(new User(data as Persona));
+            const user = new UserModel(new User(data));
             CurrentUser.set(user);
 
             goto('/taskList');

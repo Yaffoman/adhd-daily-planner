@@ -1,5 +1,7 @@
-import {Configuration, OpenAIApi} from "openai";
+import {Configuration, OpenAIApi, type ChatCompletionResponseMessage} from "openai";
 import {sampleResume} from "./sample";
+import { taskContextPrompt } from "./prompts";
+import type { Message } from "../taskChat/domain/message";
 
 
 const formatPersonaInstructions = "Format instructions: \n" +
@@ -25,11 +27,12 @@ export async function generatePersona(resume) {
 
 
 const configuration = new Configuration({
-    apiKey: import.meta.env.VITE_OPENAI_KEY,
+    apiKey: import.meta.env.VITE_OPENAI_KEY_GPT4,
 });
 const openai = new OpenAIApi(configuration);
 
-export async function conversationRequest(messages, model = "gpt-4") {
+export async function conversationRequest(messages, model = "gpt-4"): Promise<ChatCompletionResponseMessage> {
+    console.log('Message: ', messages)
     const modelConfig = {
         model: model,
         temperature: 1,
@@ -39,8 +42,10 @@ export async function conversationRequest(messages, model = "gpt-4") {
         presence_penalty: 0,
     }
     const response = await openai.createChatCompletion({
-        ...modelConfig, messages: messages
+        ...modelConfig, messages: [{role: 'system', content: taskContextPrompt}, ...messages]
     });
+
+    console.log(response);
     return response.data.choices[0].message;
 }
 
