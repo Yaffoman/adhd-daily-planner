@@ -43,4 +43,4 @@ class _TaskListModel extends Model<TaskListState> {
     
 }
 
-export const TaskList = new _TaskListModel(new TaskListState({tasks: [new TaskModel(new Task({title: "Write a medium blog" }))]}));
+export const TaskList = new _TaskListModel(new TaskListState({tasks: []}));
