@@ -13,6 +13,10 @@
     let loading = false;
     let showModal = false;
     let taskContext = '';
+    const remainingTotalMinutes = task ? task.state.subTasks.filter(subtask => !subtask.state.isComplete).length * 15 : 0;
+    const remainingHours = Math.floor(remainingTotalMinutes / 60);
+    const remainingMinutes = remainingTotalMinutes % 60;
+    const remainingTime = `${remainingHours ? remainingHours + ' Hrs' : ''} ${remainingMinutes ? remainingMinutes + ' Min' : ''}`;
 
 </script>
 
@@ -24,7 +28,7 @@
         <button class:bg-slate-800={!$task.isComplete} class:hover:bg-slate-700={!$task.isComplete} class:bg-ice={$task.isComplete} class="rounded-full border-2 border-ice border-opacity-75 hover:cursor-pointer h-6 w-6 min-h-[1.5rem] min-w-[1.5rem] max-h-6 max-w-6 my-auto" on:click={() => task.markComplete(!$task.isComplete)}/>
         <div class="flex flex-col ml-3" class:line-through={$task.isComplete}>
             <p class="font-medium">{task.state.title}</p>
-            <!-- <p>Estimated Time: {$task.timeEstimate}</p> -->
+             <p>Time Remaining: {remainingTime}</p>
             <p class="text-sm mt-1">{$task.context !== 'No additional context provided.' ? $task.context : ''}</p>
             <!-- <p class="text-sm mt-1">{$task.context}</p> -->
         </div>
@@ -36,7 +40,7 @@
                 arrow_drop_down
             </button>
         {/if}
-        
+
     </div>
     {#if open}
         <div transition:slide={{duration: 250}}>
@@ -44,7 +48,7 @@
                 <svelte:self task={subTask} isSubTask={true} depth={depth + 1}/>
             {/each}
         </div>
-        
+
     {/if}
 </div>
 
