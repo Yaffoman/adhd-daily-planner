@@ -16,13 +16,16 @@
 
 </script>
 
-<div class="h-full w-full flex flex-col px-10 overflow-auto">
-    <h1 class="text-white text-4xl font-medium pt-10">Hello {$CurrentUser.state.name}</h1>
-    <p class="text-white text-lg">Please input your goals for the day</p>
+<div class="h-full w-full flex flex-col px-10">
+    <h1 class="text-white text-4xl font-medium pt-10">Hello {$CurrentUser.state.name.split(' ')[0]}</h1>
+    <p class="text-white text-lg mt-1.5">Let's work on planning out your day!</p>
     <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5" />
-    <TaskList />
-    <button class="px-3 py-1.5 bg-blue-base rounded hover:bg-blue-hover text-white h-[40px] ml-2 w-36" on:click={openAddTaskChat}>Add Task</button>
+    <div class="overflow-auto flex-grow">
+        <TaskList />     
+    </div>
+    <button class="px-3 py-1.5 bg-blue-base rounded hover:bg-blue-hover text-white h-[40px] w-full sm:w-3/4 md:w-1/2 mb-4 mx-auto" on:click={openAddTaskChat}>Add Task</button>
     <TaskChat {showChat} taskChat={taskChatModel} on:closeChat={() => showChat = false}  />
 </div>
+
 
 
