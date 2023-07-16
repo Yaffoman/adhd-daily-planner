@@ -31,7 +31,7 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 export const personasCol = createCollection<Persona>('personas')
 export const TEST_USER_ID = `${import.meta.env.mode}-user`
 export const testDoc = doc(personasCol, TEST_USER_ID)
-
+console.log(import.meta.env)
 export async function getPersona() {
     const parseDoc = await getDoc(testDoc);
     return parseDoc.data() as Persona;
