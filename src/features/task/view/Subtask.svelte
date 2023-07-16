@@ -12,8 +12,13 @@
     export let depth: number = 0;
 
     const dispatch = createEventDispatcher();
+    const fifteenMinutesInSeconds = 15 * 60;
+
 
     let focusMode = false;
+    let time = fifteenMinutesInSeconds;
+    let timer = null;
+    let timerExpired = false;
 
     function updateRemainingTime() {
         // Mark the task as complete 
@@ -25,6 +30,28 @@
 
     function handleClick() {
         focusMode = true;
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            time--;
+            if (time <= 0) {
+                clearInterval(timer)
+                timerExpired = true;
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        time = 15 * 60;
+        clearInterval(timer);
+        timer = null;
+    }
+
+    function stopTimer() {
+        clearInterval(timer);
+        timer = null;
+
     }
 
 </script>
@@ -50,27 +77,57 @@
 <!-- svelte-ignore missing-declaration -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- Enter Focus Mode -->
+<!-- svelte-ignore missing-declaration -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if focusMode}
     <div
             transition:fade={{duration: 200}}
             class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur px-10 justify-between flex flex-col"
             class:hidden={!focusMode}
-            on:click={() => focusMode = false}
+            on:click={() => {focusMode = false; stopTimer()}}
     >
         <div>
             <h1 class="text-white text-5xl font-medium pt-10 text-center mt-36">Focus Mode</h1>
             <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5"/>
-            <h2 class="mx-auto mt-10 text-2xl text-white my-2">Task:&emsp;{task.state.title}</h2>
-            <h2 class="mx-auto text-xl text-white">Additional Notes:&emsp;{task.state.context}</h2>
-        </div>
-        <div class="flex justify-center p-5">
+            <div class="pl-8">
+            <h2 class="mx-auto mt-10 text-4xl text-white">Task</h2>
+            <h2 class="mx-auto text-2xl text-white mb-5">{task.state.title}</h2>
+            <h2 class="mx-auto text-4xl text-white">Notes</h2>
+            <h2 class="mx-auto text-2xl text-white">{task.state.context}</h2>
+            </div>
+            <div class="flex justify-center flex-col items-center">
 
-            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>Stop Focus</button>
+                <h1 class="mx-auto mt-10 text-[168px] text-white my-2" class:animate-pulse={timerExpired} style="animation-duration: 1.3s">
+                    {Math.floor(time / 60) < 10 ? "0" : ""}{Math.floor(time / 60)}:
+                    {time % 60 < 10 ? "0" : ""}{time % 60}</h1>
+                <div>
+                    <button on:click|stopPropagation={timer ? stopTimer : startTimer}
+                            class="bg-ice rounded-full px-5 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12"
+                    >
+                        {timer ? "Stop Timer" : "Start Timer"}
+                    </button>
+                    {#if time !== fifteenMinutesInSeconds}
+                    <button on:click|stopPropagation={resetTimer} transition:fade={{duration: 200}}
+                            class="bg-slate-400 rounded-full px-2 hover:cursor-pointer min-h-[1.5rem] min-w-[1.5rem] h-12 w-fit"
+                    >
+                        Reset
+                    </button>
+                        {/if}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="flex justify-center p-5">
+            <button class="text-white rounded bg-red-base w-fit px-2 text-1xl" on:click={() => focusMode = false}>
+                Exit
+            </button>
         </div>
     </div>
 
 {/if}
-
 <style>
 
     .depth-0 {
