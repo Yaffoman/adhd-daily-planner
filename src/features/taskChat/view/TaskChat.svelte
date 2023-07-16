@@ -22,12 +22,22 @@
         showChat = false;
         dispatch('closeChat');
     }
+
+    function handleKeypress(event: KeyboardEvent) {
+        if (!showChat) return;
+        if (event.key === 'Enter') {
+            handleChatInput();
+        }
+    }
     
   </script>
   
   <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <svelte:window on:keypress={handleKeypress}/>
   {#if showChat}
+   
     <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
     transition:fade={{duration: 250}}
     class="fixed inset-0 z-40 bg-black bg-opacity-50"
