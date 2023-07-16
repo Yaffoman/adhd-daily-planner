@@ -90,7 +90,7 @@
     >
         <div class="w-full mx-auto">
             <div class="w-full md:w-3/4 xl:w-1/2 mx-auto">
-                <h1 class="text-white text-5xl font-medium pt-10 text-center mt-20 min-[500px]:mt-36">Focus Mode</h1>
+                <h1 class="text-white text-5xl font-medium pt-10 text-center mt-5 min-[500px]:mt-36">Focus Mode</h1>
                 <h3 class="text-white text-lg text-opacity-90 pt-4 text-center">For better focus, turn on Do Not Disturb while working on this task</h3>
                 <div class="w-full h-px min-h-[1px] bg-white opacity-10 my-5 mx-auto"/>
                 <div class="w-full flex flex-col">
